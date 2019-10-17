@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      profile: eurekas,search,feign,rabbitmq
+      uri: http://localhost:10000
+      name: application
+

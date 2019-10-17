@@ -1,0 +1,27 @@
+server:
+  port: 12345
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        #后台服务的路由规则
+        - uri: lb://web-back
+          predicates:
+            - Path=/back/**
+          filters:
+            #此作用是过滤掉第一层请求
+            - StripPrefix=1
+        #商品查询服务的路由规则
+        - uri: lb://web-search
+          predicates:
+            - Path=/search/**
+          #商品详情的规则，小的在前，大的在后，/html/**的服务会被转到item进行处理
+        - uri: lb://web-item
+          predicates:
+            - Path=/item/**,/html/**
+         #前台服务的潜规则
+        - uri: lb://web-front
+          predicates:
+            - Path=/**

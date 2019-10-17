@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    config:
+      name: application
+      uri: http://localhost:10000
+      profile: eurekas,item,rabbitmq

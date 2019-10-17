@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    config:
+      profile: eurekas,back,datasource,fdfs,feign
+      name: application
+      uri: http://localhost:10000

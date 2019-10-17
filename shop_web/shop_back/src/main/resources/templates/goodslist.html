@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <base th:href="|${#request.getContextPath()}/back/|">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+    <!-- Reset Stylesheet -->
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
+          media="screen"/>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"
+          media="screen"/>
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
+          media="screen"/>
+
+    <!--                       Javascripts                       -->
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="resources/scripts/jquery-1.8.3.min.js"></script>
+    <!-- jQuery Configuration -->
+    <!-- <script type="text/javascript"
+             src="resources/scripts/simpla.jquery.configuration.js"></script>-->
+
+    <!--弹出框的依赖和css-->
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+    <script type="text/javascript"
+            src="resources/widget/dialog/jquery-ui-1.9.2.custom.min.js"></script>
+
+
+    <!--上传插件的依赖-->
+    <link rel="stylesheet" type="text/css" href="resources/widget/webuploader/webuploader.css">
+
+    <!--引入JS-->
+    <script type="text/javascript"
+            src="resources/widget/webuploader/webuploader.min.js"></script>
+
+
+    <script>
+        /*
+        * 页面加载好后初始化
+        * */
+        $(function () {
+            var uploader = WebUploader.create({
+
+                //是否自动上传
+                auto: true,
+                // swf文件路径
+                swf: 'resource/widget/webuploader/Uploader.swf',
+
+                // 文件接收服务端。
+                server: 'goodsManage/uploader',
+
+                // 选择文件的按钮。可选。
+                // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                pick: '#filepicker1',
+
+
+            });
+
+            //绑定一个上传成功的回调事件
+            uploader.on("uploadSuccess", function (file, response) {
+                //通过文件名称进行回显
+                var filename = response.filename;
+
+                //设置image显示的图片
+                $("#img_fengmian").attr("src", filename);
+
+                //设置封面的路径到隐藏域
+                $("#hidden_fengmian").val(filename);
+
+            });
+
+        });
+
+
+        $(function () {
+            var uploader = WebUploader.create({
+
+                //是否自动上传
+                auto: true,
+                // swf文件路径
+                swf: 'resource/widget/webuploader/Uploader.swf',
+
+                // 文件接收服务端。
+                server: 'goodsManage/uploader',
+
+                // 选择文件的按钮。可选。
+                // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                pick: '#filepicker2',
+
+
+            });
+
+            //绑定一个上传成功的回调事件
+            uploader.on("uploadSuccess", function (file, response) {
+
+
+                //通过文件名称进行回显
+                var filename = response.filename;
+
+                var html = "<img id='img_fengmian' style='width: 90px; height: 80px; margin: 5px' src= ' " + filename + "' />";
+                html += "<input type='hidden' name='otherImg' value='" + filename + "' >";
+
+
+                $("#img_otherImg").append(html);
+
+
+            });
+
+        });
+
+        /*添加商品*/
+        function dialog_add() {
+            $("#goodsadd_div").dialog({
+                title: "添加商品",
+                width: 700,
+                height: 600,
+                modal: true
+            });
+        }
+
+
+    </script>
+
+
+</head>
+<body>
+<div id="main-content">
+    <div class="content-box">
+        <!-- End .content-box-header -->
+        <div class="content-box-content">
+            <div class="tab-content default-tab" id="tab1">
+                <table>
+                    <thead>
+                    <tr>
+                        <th><input class="check-all" type="checkbox"/></th>
+                        <th>商品编号</th>
+                        <th>标题</th>
+                        <th>图片</th>
+                        <th>价格</th>
+                        <th>描述</th>
+                        <th>库存</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="goods : ${goodsList}">
+                        <td><input type="checkbox"/></td>
+                        <td th:text="${goods.id}">1</td>
+
+                        <td th:text="${goods.subject}">2</td>
+
+                        <td th:each="image : ${goods.goodsImages}" th:if="${image.isfengmian == 1}">
+                            <img style="width: 100px; height: 90px" th:src="${image.url}"/>
+                        </td>
+
+
+                        <td th:text="${goods.price}">2</td>
+                        <td th:text="${goods.info}">2</td>
+                        <td th:text="${goods.save}">2</td>
+
+
+                        <td>
+                            <!-- Icons --> <a href="#" title="Edit"><img
+                                src="resources/images/icons/pencil.png" alt="Edit"/></a> <a
+                                href="#" title="Delete"><img
+                                src="resources/images/icons/cross.png" alt="Delete"/></a> <a
+                                href="#" title="Edit Meta"><img
+                                src="resources/images/icons/hammer_screwdriver.png"
+                                alt="Edit Meta"/></a>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <div class="bulk-actions align-left">
+                                <a class="mybutton" onclick="dialog_add();">添加商品</a>
+                            </div>
+                            <div class="pagination">
+                                <a href="#" title="First Page">&laquo; First</a><a href="#"
+                                                                                   title="Previous Page">&laquo;
+                                Previous</a> <a href="#"
+                                                class="number" title="1">1</a> <a href="#" class="number"
+                                                                                  title="2">2</a> <a href="#"
+                                                                                                     class="number current"
+                                                                                                     title="3">3</a>
+                                <a href="#" class="number" title="4">4</a> <a href="#"
+                                                                              title="Next Page">Next &raquo;</a><a
+                                    href="#"
+                                    title="Last Page">Last &raquo;</a>
+                            </div> <!-- End .pagination -->
+                            <div class="clear"></div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- End .content-box-content -->
+    </div>
+</div>
+<!-- End #main-content -->
+
+<div id="goodsadd_div" style="display: none;">
+    <div class="content-box">
+        <div class="content-box-content">
+            <div class="tab-content default-tab" id="tab2">
+                <form action="goodsManage/insert" method="post">
+                    <fieldset>
+                        <!-- Set class to "column-left" or "column-right" on fieldsets to divide the form into columns -->
+                        <p>
+                            <label>标题</label> <input
+                                class="text-input medium-input" type="text" id="subject"
+                                name="subject"/>
+                            <!-- Classes for input-notification: success, error, information, attention -->
+                            <br/>
+                        </p>
+                        <p>
+                            <label>上传封面</label>
+                            <img id="img_fengmian" style="width: 90px; height: 80px ">
+                            <input type="hidden" id="hidden_fengmian" name="fengmian" value="">
+                        <div id="filepicker1"> 添加封面</div>
+
+                        </p>
+
+                        <p>
+                            <label>添加其他图片</label>
+                        <div id="img_otherImg" style="with: 100%; height: 200px; border: black solid 1px"></div>
+                        <div id="filepicker2" style="margin-top: 10px "> 上传其他图片</div>
+                        </p>
+
+                        <p>
+                            <label>价格</label> <input
+                                class="text-input large-input" type="text" id="price"
+                                name="price"/>
+                        </p>
+
+                        <p>
+                            <label>库存</label> <input
+                                class="text-input large-input" type="text" id="save"
+                                name="save"/>
+                        </p>
+
+                        <p>
+                            <label>商品详情</label>
+                            <textarea class="text-input textarea wysiwyg" id="textarea"
+                                      name="info" cols="79" rows="15"></textarea>
+                        </p>
+                        <p>
+                            <input class="mybutton" type="submit" value="Submit"/>
+                        </p>
+                    </fieldset>
+                    <div class="clear"></div>
+                    <!-- End .clear -->
+                </form>
+            </div>
+            <!-- End #tab2 -->
+        </div>
+        <!-- End .content-box-content -->
+    </div>
+
+</div>
+
+
+</body>
+</html>

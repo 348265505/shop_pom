@@ -1,0 +1,4 @@
+spring:
+  data:
+    solr:
+      host: http://192.168.68.200:8983/solr/mycollection
